@@ -1,0 +1,91 @@
+Here's the HTML file provided:
+
+```html name=index.html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ondulation des Phrases</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Futura:wght@400&family=Impact:wght@400&display=swap');
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .phrase {
+            font-size: 24px;
+            margin: 20px;
+            padding: 10px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .phrase:hover {
+            transform: translateY(-10px);
+        }
+
+        .espanol {
+            color: #98FB98; /* Pale Green */
+            font-family: 'Impact', sans-serif;
+            font-weight: bold;
+        }
+
+        .francais {
+            color: #ADD8E6; /* Pale Blue */
+            font-family: 'Futura', sans-serif;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="phrase francais" id="francais">
+            Personne ne nous avait prévenu, et pourtant, nous nous sommes reconnus.
+        </div>
+        <div class="phrase espanol" id="espanol">
+            Nadie nos había avisado, y sin embargo, nos reconocimos.
+        </div>
+    </div>
+
+    <script>
+        // JavaScript pour rendre l'effet d'ondulation au toucher ou au survol
+        const francais = document.getElementById("francais");
+        const espanol = document.getElementById("espanol");
+
+        // Fonction pour ajouter l'effet d'ondulation
+        const addUndulationEffect = (element) => {
+            element.style.transform = "translateY(-10px)";
+        };
+
+        // Fonction pour retirer l'effet d'ondulation
+        const removeUndulationEffect = (element) => {
+            element.style.transform = "translateY(0)";
+        };
+
+        // Ajouter des écouteurs d'événements pour les interactions de la souris
+        francais.addEventListener("mouseenter", () => addUndulationEffect(francais));
+        francais.addEventListener("mouseleave", () => removeUndulationEffect(francais));
+        espanol.addEventListener("mouseenter", () => addUndulationEffect(espanol));
+        espanol.addEventListener("mouseleave", () => removeUndulationEffect(espanol));
+
+        // Ajouter des écouteurs d'événements pour les interactions tactiles
+        francais.addEventListener("touchstart", () => addUndulationEffect(francais));
+        francais.addEventListener("touchend", () => removeUndulationEffect(francais));
+        espanol.addEventListener("touchstart", () => addUndulationEffect(espanol));
+        espanol.addEventListener("touchend", () => removeUndulationEffect(espanol));
+    </script>
+</body>
+</html>
+```
