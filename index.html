@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ondulation des Phrases</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Futura:wght@400&family=Impact:wght@400&display=swap');
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .phrase {
+            font-size: 48px; /* Twice as big */
+            margin: 20px;
+            padding: 10px;
+            position: relative;
+        }
+
+        .francais span {
+            display: inline-block;
+            animation: fall 0.5s ease forwards;
+            opacity: 0;
+            transform: translateY(-100vh);
+        }
+
+        @keyframes fall {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .espanol {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: white;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            to {
+                transform: scale(5);
+                opacity: 0;
+            }
+        }
+
+        .chatbox {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chatbox-messages {
+            padding: 10px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .chatbox-input {
+            display: flex;
+        }
+
+        .chatbox-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #444;
+            outline: none;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .chatbox-input button {
+            padding: 10px;
+            border: none;
+            background-color: #444;
+            color: white;
+            cursor: pointer;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .message.user {
+            background-color: #007bff;
+            align-self: flex-end;
+        }
+
+        .message.bot {
+            background-color: #6c757d;
+            align-self: flex-start;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="phrase francais" id="francais">
+            <!-- French sentence with each letter wrapped in a span -->
+        </div>
+        <div class="phrase espanol" id="espanol">
+            Nadie nos había avisado, y sin embargo, nos reconocimos.
+        </div>
+    </div>
+
+    <!-- Adding the chatbox -->
+    <div class="chatbox">
+        <div class="chatbox-messages" id="chatbox-messages"></div>
+        <div class="chatbox-input">
+            <input type="text" id="chatbox-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <audio id="keyboard-sound" src="keyboard-sound.mp3" preload="auto"></audio>
+
+    <script>
+        // JavaScript to make the French sentence appear letter by letter
+        const francaisText = "Personne ne nous avait prévenu, et pourtant, nous nous sommes reconnus.";
+        const francaisContainer = document.getElementById("francais");
+        const espanolContainer = document.getElementById("espanol");
+
+        for (let i = 0; i < francaisText.length; i++) {
+            const span = document.createElement("span");
+            span.textContent = francaisText[i];
+            span.style.animationDelay = `${i * 0.1}s`;
+            francaisContainer.appendChild(span);
+        }
+
+        // JavaScript to make the Spanish sentence appear as if typed on a keyboard
+        const espanolText = espanolContainer.textContent;
+        espanolContainer.textContent = "";
+        const keyboardSound = document.getElementById("keyboard-sound");
+
+        let index = 0;
+        const typeEffect = () => {
+            if (index < espanolText.length) {
+                espanolContainer.textContent += espanolText[index];
+                keyboardSound.currentTime = 0;
+                keyboardSound.play();
+                index++;
+                setTimeout(typeEffect, 100); // Adjust typing speed here
+            }
+        };
+        typeEffect();
+
+        // Function to create firework effect
+        const createFirework = (x, y) => {
+            for (let i = 0; i < 30; i++) {
+                const firework = document.createElement("div");
+                firework.className = "firework";
+                firework.style.left = `${x}px`;
+                firework.style.top = `${y}px`;
+                firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                firework.style.transform = `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px)`;
+                document.body.appendChild(firework);
+                firework.addEventListener("animationend", () => firework.remove());
+            }
+        };
+
+        francaisContainer.addEventListener("click", (e) => createFirework(e.clientX, e.clientY));
+        espanolContainer.addEventListener("click", (e) => createFirework(e.clientX, e.clientY));
+
+        francaisContainer.addEventListener("touchstart", (e) => {
+            const touch = e.touches[0];
+            createFirework(touch.clientX, touch.clientY);
+        });
+        espanolContainer.addEventListener("touchstart", (e) => {
+            const touch = e.touches[0];
+            createFirework(touch.clientX, touch.clientY);
+        });
+
+        // Chatbot functionality
+        const chatbotMessages = document.getElementById("chatbox-messages");
+        const chatbotInput = document.getElementById("chatbox-input");
+
+        const botReplies = [
+            "Hola guapo! ¿Que tal?",
+            "Eres el sol que ilumina mi día.",
+            "¿Qué haces de interesante?",
+            "Me encanta hablar contigo.",
+            "Tienes un corazón de oro.",
+            "Tu sonrisa es contagiosa.",
+            "Siempre estoy aquí para ti.",
+            "Me haces sentir tan especial.",
+            "Eres mi persona favorita.",
+            "¿Qué planes tienes para hoy?"
+        ];
+
+        const addMessage = (text, sender) => {
+            const message = document.createElement("div");
+            message.className = `message ${sender}`;
+            message.textContent = text;
+            chatbotMessages.appendChild(message);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        };
+
+        const sendMessage = () => {
+            const userMessage = chatbotInput.value;
+            if (userMessage.trim() !== "") {
+                addMessage(userMessage, "user");
+                chatbotInput.value = "";
+                setTimeout(() => {
+                    const botMessage = botReplies[Math.floor(Math.random() * botReplies.length)];
+                    addMessage(botMessage, "bot");
+                }, 1000);
+            }
+        };
+
+        // Initial bot greeting
+        setTimeout(() => {
+            addMessage("Hola guapo! ¿Que tal?", "bot");
+        }, 1000);
+
+        // Send message on Enter key press
+        chatbotInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
