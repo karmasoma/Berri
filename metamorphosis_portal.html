@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Metamorphosis - Portal Sequence</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: 'Georgia', serif;
+      padding: 40px;
+      line-height: 1.8;
+      transition: background-color 1s, color 1s;
+    }
+    .text {
+      font-size: 1.4em;
+      white-space: pre-wrap;
+      margin-bottom: 40px;
+      opacity: 0;
+      transition: opacity 2s ease-in;
+    }
+    .choice {
+      display: block;
+      margin: 20px 0;
+      padding: 10px 20px;
+      background-color: #333;
+      border: none;
+      color: white;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .choice:hover {
+      background-color: #666;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="sequence"></div>
+
+<script>
+  const sequences = [
+    {
+      text: "You drift.
+
+There's a humming. A field of stars inside your lungs.
+You are not where you were.
+You are before or after, but not now.",
+      choices: ["Feel the edges of yourself", "Speak to the silence"]
+    },
+    {
+      text: "A portal shivers into being.
+It reflects your childhood bedroom, a war zone, and the ocean all at once.
+You recall Schubert... or is it just your bones aching?",
+      choices: ["Enter the portal", "Sit beside it and hum"]
+    },
+    {
+      text: "Inside, time leaks. There are dates melting into shadows: 1973. 1492. 2020. You hear a girl whisper: “We’re inside UncertainTime.”
+
+You remember Anaïs.",
+      choices: ["Call her name", "Hide from memory"]
+    },
+    {
+      text: "A butterfly flickers across the scene. It pauses. It sees you.
+Then it speaks:
+“You were the dreamer all along.”
+
+The screen breathes.",
+      choices: ["Believe it", "Ask: What is real?"]
+    },
+    {
+      text: "You bloom. Not like a flower, but like a thought never thought before.
+The portal vanishes.
+Only breath remains.",
+      choices: []
+    }
+  ];
+
+  let index = 0;
+
+  function renderSequence() {
+    const container = document.getElementById('sequence');
+    container.innerHTML = '';
+
+    const textDiv = document.createElement('div');
+    textDiv.className = 'text';
+    textDiv.innerText = sequences[index].text;
+    container.appendChild(textDiv);
+    setTimeout(() => textDiv.style.opacity = 1, 100);
+
+    sequences[index].choices.forEach((choice, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice';
+      btn.innerText = choice;
+      btn.onclick = () => {
+        index = Math.min(index + 1, sequences.length - 1);
+        renderSequence();
+      };
+      container.appendChild(btn);
+    });
+  }
+
+  window.onload = renderSequence;
+</script>
+
+</body>
+</html>
